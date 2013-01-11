@@ -27,6 +27,6 @@ public class IpV4Addr {
 
     // IMPLICIT CONVERTERS /////////////////////////////////////////////////
     public String toString() {
-        return octet1 + "." + octet2 + "." + octet3 + ".";
+        return octet1 + "." + octet2 + "." + octet3 + "." + octet4;
     }
 }
