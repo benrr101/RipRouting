@@ -43,12 +43,17 @@ public class Router extends Thread {
         while(true) {
             // Step 1: Is there any data to be received?
             for(Map.Entry<IpV4Addr, Connection> entry: connections.entrySet()) {
-                RoutingTable table = entry.getValue().receive();
-                if(table == null) {
-                    // Nothing to receive yet...
-                    continue;
-                }
-                updateRoutingTable(table, entry.getKey());
+                // Try to connect for a update
+                //try {
+                    RoutingTable table = entry.getValue().receive();
+                    if(table == null) {
+                        // Nothing to receive yet...
+                        continue;
+                    }
+                    updateRoutingTable(table, entry.getKey());
+                //} /*catch(NullPointerException e) {
+                    // THE LINK IS DOWN!
+                //}*/
             }
 
             // Step 2: Is it time to broadcast?
@@ -60,9 +65,7 @@ public class Router extends Thread {
                 // Sleep! Save my CPU!
                 try {
                     sleep(500);
-                } catch(InterruptedException e) {
-                    // Well, might as well keep going...
-                }
+                } catch(InterruptedException e) { }
             }
         }
     }
@@ -124,10 +127,21 @@ public class Router extends Thread {
         }
     }
 
+
+
     private void broadcastRouteTable() {
         // Send the route table to each of the connections
-        for(Connection c : connections.values()) {
-            c.send(routingTable);
+        for(Map.Entry<IpV4Addr, Connection> c : connections.entrySet()) {
+            // Construct a routing table that doesn't have the destination of c
+            // as a next hop (split-horizon)
+            RoutingTable r = new RoutingTable(getIpAddress());
+            for(Map.Entry<IpV4Addr, RoutingEntry> entry : routingTable.entrySet()) {
+                if(!entry.getValue().getNextHop().equals(c.getKey())) {
+                    r.put(c.getKey(), entry.getValue());
+                }
+            }
+
+            c.getValue().send(routingTable);
         }
 
         // Set the time we last broadcast to now
@@ -137,5 +151,4 @@ public class Router extends Thread {
     // GETTERS /////////////////////////////////////////////////////////////
     public IpV4Addr getIpAddress() { return ipAddress; }
     public IpV4Addr getSubnetMask() { return subnetMask; }
-    public int getConnectionCount() { return connections.size(); }
 }

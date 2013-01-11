@@ -13,6 +13,8 @@ public class Main extends Thread {
     private static ArrayList<Connection> connections = new ArrayList<Connection>();
 
     public static void main(String[] args) {
+        boolean dynamics = args.length > 0;
+
         try {
             // Open the network definition file
             InputStream netStream = Thread.currentThread().getClass().getResourceAsStream("/network");
@@ -64,7 +66,7 @@ public class Main extends Thread {
                     }
 
                     // Create the connection and add it
-                    Connection c = new Connection(linkCost);
+                    Connection c = new Connection(linkCost, dynamics);
                     connections.add(c);
                     routerA.addConnection(c, routerB.getIpAddress(), routerB.getSubnetMask());
                     routerB.addConnection(c, routerA.getIpAddress(), routerA.getSubnetMask());

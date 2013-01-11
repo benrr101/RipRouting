@@ -1,5 +1,7 @@
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Random;
 
 /**
  * Connection class
@@ -18,11 +20,17 @@ public class Connection extends LinkedList<RoutingTable> {
      */
     private boolean down = false;
 
+    private int downProbability;
+
+    private Date nextCheck = new Date();
+
     // CONSTRUCTORS ////////////////////////////////////////////////////////
 
-    public Connection(int linkCost) {
+    public Connection(int linkCost, boolean canGoDown) {
         // Set the link speed
         this.linkCost = linkCost;
+        downProbability = (canGoDown) ? 2 : -1;
+
     }
 
     // METHODS /////////////////////////////////////////////////////////////
@@ -37,6 +45,23 @@ public class Connection extends LinkedList<RoutingTable> {
         if(down) {
             throw new NullPointerException("Link is down!");
         }
+
+        // Will we go down?
+        Random r = new Random();
+        if(new Date().after(nextCheck) && r.nextInt(10) <= downProbability) {
+            if(r.nextInt(10) <= downProbability) {
+                System.out.println("Link went down");
+                // OH NO! we're going down!
+                down = true;
+                throw new NullPointerException("Link is down!");
+            } else {
+                // Link is back up
+                down = false;
+            }
+        }
+
+        // Update when we next check
+        nextCheck = new Date(System.currentTimeMillis() + 3000);
 
         // Return whatever is at the head of the list, or nothing
         try {
