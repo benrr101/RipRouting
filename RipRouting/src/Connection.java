@@ -1,43 +1,65 @@
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.LinkedList;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Omega
- * Date: 1/7/13
- * Time: 10:31 PM
- * To change this template use File | Settings | File Templates.
+ * Connection class
+ * @descrip Connection class to be used as a pipe between router threads.
+ * @author Benjamin Russell (brr1922)
  */
-public class Connection extends ArrayBlockingQueue<RoutingTable> {
+public class Connection extends LinkedList<RoutingTable> {
     // MEMBER VARIABLES ////////////////////////////////////////////////////
+    /**
+     * The link speed for the link (aka the metric)
+     */
     private final int linkSpeed;
 
+    /**
+     * Whether or not the link is down
+     */
     private boolean down = false;
 
     // CONSTRUCTORS ////////////////////////////////////////////////////////
 
     public Connection(int linkSpeed) {
-        // Create a blocking queue with a store size of 1
-        super(1);
-
         // Set the link speed
         this.linkSpeed = linkSpeed;
     }
 
     // METHODS /////////////////////////////////////////////////////////////
-    public boolean canReceive() {
-        return super.isEmpty();
+
+    /**
+     * Receives whatever is at the head of the pipe
+     * @return  A routing table, if there is one, null otherwise
+     * @throws NullPointerException Thrown if the link is down
+     */
+    public RoutingTable receive() throws NullPointerException {
+        // Verify that the link is up before returning something
+        if(down) {
+            throw new NullPointerException("Link is down!");
+        }
+
+        // Return whatever is at the head of the list, or nothing
+        return (super.size() > 0) ? super.removeFirst() : null;
     }
 
     /**
-     * @throws Exception    Thrown if the blocking was interrupted.
-     * @return
+     * Adds the given routing table to the list pipe
+     * @param r The routing table to send
+     * @throws NullPointerException Thrown if the link is down
      */
-    public RoutingTable receive() {
-        // Wait until we can receive something
-        try {
-            return super.take();
-        } catch(InterruptedException e) {
-            throw new Exception("Cannot receive. Blocking was interrupted.", e);
+    public void send(RoutingTable r) throws NullPointerException {
+        if(down) {
+            throw new NullPointerException("Link is Down!");
         }
+
+        super.add(r);
+    }
+
+    // GETTERS/SETTERS /////////////////////////////////////////////////////
+
+    /**
+     * @return The link speed
+     */
+    public int getLinkSpeed() {
+        return linkSpeed;
     }
 }
