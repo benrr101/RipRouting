@@ -1,5 +1,5 @@
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Router Class
@@ -14,7 +14,7 @@ public class Router extends Thread {
 
     private final IpV4Addr subnetMask;
 
-    private ArrayList<Connection> connections = new ArrayList<Connection>();
+    private HashMap<IpV4Addr, Connection> connections = new HashMap<IpV4Addr, Connection>();
 
     private RoutingTable routingTable;
 
@@ -41,7 +41,7 @@ public class Router extends Thread {
     public void run() {
         while(true) {
             // Step 1: Is there any data to be received?
-            for(Connection c : connections) {
+            for(Connection c : connections.values()) {
                 updateRoutingTable(c.receive());
             }
 
@@ -72,7 +72,11 @@ public class Router extends Thread {
      */
     public void addConnection(Connection c, IpV4Addr destination, IpV4Addr subnetMask) {
         // Add the connection to the list of connections
-        this.connections.add(c);
+        if(connections.containsKey(destination)) {
+            // Duplicate connection
+            return;
+        }
+        this.connections.put(destination, c);
 
         // Add a routing entry for the routing table
         RoutingEntry r = new RoutingEntry(
@@ -91,8 +95,8 @@ public class Router extends Thread {
     private void broadcastRouteTable() {
         System.out.println(ipAddress + "\t Broadcasting!");
         // Send the route table to each of the connections
-        for(Connection c : connections) {
-            c.add(routingTable);
+        for(Connection c : connections.values()) {
+            c.send(routingTable);
         }
 
         // Set the time we last broadcast to now

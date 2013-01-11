@@ -59,7 +59,5 @@ public class Connection extends LinkedList<RoutingTable> {
     /**
      * @return The link speed
      */
-    public int getLinkSpeed() {
-        return linkSpeed;
-    }
+    public int getLinkSpeed() { return linkSpeed; }
 }

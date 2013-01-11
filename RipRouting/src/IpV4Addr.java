@@ -29,4 +29,11 @@ public class IpV4Addr {
     public String toString() {
         return octet1 + "." + octet2 + "." + octet3 + "." + octet4;
     }
+
+    public boolean equals(IpV4Addr addr2) {
+        return this.octet1 == addr2.octet1
+                && this.octet2 == addr2.octet2
+                && this.octet3 == addr2.octet3
+                && this.octet4 == addr2.octet4;
+    }
 }
