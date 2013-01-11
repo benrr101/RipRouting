@@ -21,7 +21,7 @@ public class IpV4Addr {
             octet3 = Short.parseShort(tokenizer.nextToken());
             octet4 = Short.parseShort(tokenizer.nextToken());
         } catch(Exception e) {
-            throw new NumberFormatException("Invalid IPv4 address.");
+            throw new NumberFormatException("Invalid IPv4 address: " + addr);
         }
     }
 
@@ -30,7 +30,13 @@ public class IpV4Addr {
         return octet1 + "." + octet2 + "." + octet3 + "." + octet4;
     }
 
-    public boolean equals(IpV4Addr addr2) {
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof IpV4Addr))return false;
+        IpV4Addr addr2 = (IpV4Addr)other;
+
         return this.octet1 == addr2.octet1
                 && this.octet2 == addr2.octet2
                 && this.octet3 == addr2.octet3
