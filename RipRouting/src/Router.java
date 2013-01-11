@@ -33,6 +33,9 @@ public class Router extends Thread {
         // Assign the ip and mask
         this.ipAddress = ipAddress;
         this.subnetMask = subnetMask;
+
+        // Create the initial routing table
+        routingTable = new RoutingTable(this.ipAddress);
     }
 
     // THREAD METHODS //////////////////////////////////////////////////////
@@ -47,6 +50,14 @@ public class Router extends Thread {
             Date currentTime = new Date();
             if(currentTime.after(nextBroadcast)) {
                 broadcastRouteTable();
+                System.out.println(routingTable.toString());
+            } else {
+                // Sleep! Save my CPU!
+                try {
+                    sleep(500);
+                } catch(InterruptedException e) {
+                    // Well, might as well keep going...
+                }
             }
         }
     }
