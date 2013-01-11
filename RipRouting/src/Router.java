@@ -1,5 +1,6 @@
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Router Class
@@ -41,8 +42,13 @@ public class Router extends Thread {
     public void run() {
         while(true) {
             // Step 1: Is there any data to be received?
-            for(Connection c : connections.values()) {
-                updateRoutingTable(c.receive());
+            for(Map.Entry<IpV4Addr, Connection> entry: connections.entrySet()) {
+                RoutingTable table = entry.getValue().receive();
+                if(table == null) {
+                    // Nothing to receive yet...
+                    continue;
+                }
+                updateRoutingTable(table, entry.getKey());
             }
 
             // Step 2: Is it time to broadcast?
@@ -85,11 +91,37 @@ public class Router extends Thread {
                 RoutingEntry.DIRECT_LINK,
                 c.getLinkSpeed()
         );
-        this.routingTable.add(r);
+        this.routingTable.put(destination, r);
     }
 
-    private void updateRoutingTable(RoutingTable table) {
-        // Iterate over the
+    /**
+     *
+     * @param table
+     * @param source
+     */
+    private void updateRoutingTable(RoutingTable table, IpV4Addr source) {
+        // Iterate over the connections that came into
+        for(RoutingEntry entry : table.values()) {
+            // Check to see if we already have a route to this network
+            if(this.routingTable.containsKey(entry.getDestination())) {
+                // It does exist. Is it a faster link?
+                RoutingEntry ourEntry = routingTable.get(entry.getDestination());
+                if(ourEntry.getMetric() > entry.getMetric() + connections.get(source).getLinkSpeed()) {
+                    // It's a better link, we should update our routes to use it!
+                    ourEntry.setNextHop(source);
+                    ourEntry.setMetric(entry.getMetric() + connections.get(source).getLinkSpeed());
+                }
+            } else {
+                // It does not exist. We should add it straight-up
+                RoutingEntry newEntry = new RoutingEntry(
+                        entry.getDestination(),
+                        entry.getDestinationSubnetMask(),
+                        entry.getNextHop(),
+                        entry.getMetric()
+                );
+                this.routingTable.put(entry.getDestination(), newEntry);
+            }
+        }
     }
 
     private void broadcastRouteTable() {

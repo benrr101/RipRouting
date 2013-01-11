@@ -1,6 +1,6 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 
-public class RoutingTable extends ArrayList<RoutingEntry> {
+public class RoutingTable extends HashMap<IpV4Addr, RoutingEntry> {
     // MEMBER VARIABLES ////////////////////////////////////////////////////
     private IpV4Addr owner;
 
@@ -19,7 +19,7 @@ public class RoutingTable extends ArrayList<RoutingEntry> {
         output.append("<destination IP>\t<dest subnet mask>\t<next hop>\t<metric>\n");
 
         // Output info for each routing table
-        for(RoutingEntry entry : this) {
+        for(RoutingEntry entry : this.values()) {
             output.append("    " + entry.getDestination()
                     + "            " + entry.getDestinationSubnetMask()
                     + "     " + entry.getNextHop()
