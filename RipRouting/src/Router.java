@@ -21,7 +21,7 @@ public class Router extends Thread {
 
     private Date nextBroadcast = new Date(0);
 
-    private static final int BROADCAST_DELAY_SECONDS = 10;
+    private static final int BROADCAST_DELAY_SECONDS = 2;
 
     // CONSTRUCTOR /////////////////////////////////////////////////////////
     /**
@@ -88,7 +88,7 @@ public class Router extends Thread {
         RoutingEntry r = new RoutingEntry(
                 destination,
                 subnetMask,
-                RoutingEntry.DIRECT_LINK,
+                destination,
                 c.getLinkCost()
         );
         this.routingTable.put(destination, r);

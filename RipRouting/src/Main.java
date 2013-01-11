@@ -90,7 +90,7 @@ public class Main extends Thread {
 
         while(time < 20) {
             try {
-                sleep(990);
+                sleep(1990);
             } catch(Exception e) {}
             time++;
             System.out.println("TIME:" + time + " ---------------------");
