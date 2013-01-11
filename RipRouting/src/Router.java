@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Router Class
@@ -99,4 +98,9 @@ public class Router extends Thread {
         // Set the time we last broadcast to now
         nextBroadcast = new Date(System.currentTimeMillis() +  (BROADCAST_DELAY_SECONDS * 1000));
     }
+
+    // GETTERS /////////////////////////////////////////////////////////////
+    public IpV4Addr getIpAddress() { return ipAddress; }
+    public IpV4Addr getSubnetMask() { return subnetMask; }
+    public int getConnectionCount() { return connections.size(); }
 }

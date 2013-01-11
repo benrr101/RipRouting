@@ -20,10 +20,12 @@ public class RoutingTable extends ArrayList<RoutingEntry> {
 
         // Output info for each routing table
         for(RoutingEntry entry : this) {
-            output.append(entry.getDestination()
-                    + "\t" + entry.getDestinationSubnetMask()
-                    + "\t" + entry.getNextHop()
-                    + "\t" + entry.getMetric());
+            output.append("    " + entry.getDestination()
+                    + "            " + entry.getDestinationSubnetMask()
+                    + "     " + entry.getNextHop()
+                    + "        " + entry.getMetric()
+                    + "\n"
+            );
         }
 
         output.append("---\n");
