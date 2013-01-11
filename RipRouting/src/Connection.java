@@ -10,7 +10,7 @@ public class Connection extends LinkedList<RoutingTable> {
     /**
      * The link speed for the link (aka the metric)
      */
-    private final int linkSpeed;
+    private final int linkCost;
 
     /**
      * Whether or not the link is down
@@ -19,9 +19,9 @@ public class Connection extends LinkedList<RoutingTable> {
 
     // CONSTRUCTORS ////////////////////////////////////////////////////////
 
-    public Connection(int linkSpeed) {
+    public Connection(int linkCost) {
         // Set the link speed
-        this.linkSpeed = linkSpeed;
+        this.linkCost = linkCost;
     }
 
     // METHODS /////////////////////////////////////////////////////////////
@@ -59,5 +59,5 @@ public class Connection extends LinkedList<RoutingTable> {
     /**
      * @return The link speed
      */
-    public int getLinkSpeed() { return linkSpeed; }
+    public int getLinkCost() { return linkCost; }
 }

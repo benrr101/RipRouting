@@ -89,7 +89,7 @@ public class Router extends Thread {
                 destination,
                 subnetMask,
                 RoutingEntry.DIRECT_LINK,
-                c.getLinkSpeed()
+                c.getLinkCost()
         );
         this.routingTable.put(destination, r);
     }
@@ -106,10 +106,10 @@ public class Router extends Thread {
             if(this.routingTable.containsKey(entry.getDestination())) {
                 // It does exist. Is it a faster link?
                 RoutingEntry ourEntry = routingTable.get(entry.getDestination());
-                if(ourEntry.getMetric() > entry.getMetric() + connections.get(source).getLinkSpeed()) {
+                if(ourEntry.getMetric() > entry.getMetric() + connections.get(source).getLinkCost()) {
                     // It's a better link, we should update our routes to use it!
                     ourEntry.setNextHop(source);
-                    ourEntry.setMetric(entry.getMetric() + connections.get(source).getLinkSpeed());
+                    ourEntry.setMetric(entry.getMetric() + connections.get(source).getLinkCost());
                 }
             } else {
                 // It does not exist. We should add it straight-up

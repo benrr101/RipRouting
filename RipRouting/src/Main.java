@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Main class where execution begins.
+ * @author Benjamin Russell (brr1922)
+ */
 public class Main {
-
+    // CONSTANTS ///////////////////////////////////////////////////////////
     private static final int ROUTERS_TO_CREATE = 10;
-
-    private static final int MAX_LINK_SPEED = 10;
+    private static final int MAX_LINK_COST = 20;
 
     private static final IpV4Addr STANDARD_SUBNET_MASK = new IpV4Addr("255.255.255.0");
 
@@ -36,7 +39,7 @@ public class Main {
             }
 
             // Create a connection
-            Connection connection = new Connection(random.nextInt(MAX_LINK_SPEED - 1) + 1);
+            Connection connection = new Connection(random.nextInt(MAX_LINK_COST - 1) + 1);
 
             // Add the connection to the two routers
             Router routerA = routers.get(routerIndexA);
@@ -49,7 +52,7 @@ public class Main {
         for(Router r : routers) {
             if(r.getConnectionCount() == 0) {
                 // Create a new connection for the unconnected router
-                Connection connection = new Connection(random.nextInt(MAX_LINK_SPEED - 1) + 1);
+                Connection connection = new Connection(random.nextInt(MAX_LINK_COST - 1) + 1);
                 connections.add(connection);
 
                 Router routerA = r;
@@ -64,7 +67,7 @@ public class Main {
             }
 
             // Start it!
-            r.start();
+            System.out.println(r.getRoutingTable());
         }
     }
 }
