@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 
 /**
  * Connection class
@@ -38,7 +39,11 @@ public class Connection extends LinkedList<RoutingTable> {
         }
 
         // Return whatever is at the head of the list, or nothing
-        return (super.size() > 0) ? super.removeFirst() : null;
+        try {
+            return (super.size() > 0) ? super.removeFirst() : null;
+        } catch(NoSuchElementException e) {
+            return null;
+        }
     }
 
     /**

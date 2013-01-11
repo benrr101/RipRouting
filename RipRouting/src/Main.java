@@ -5,11 +5,8 @@ import java.util.*;
  * Main class where execution begins.
  * @author Benjamin Russell (brr1922)
  */
-public class Main {
-    // CONSTANTS ///////////////////////////////////////////////////////////
-    private static final int ROUTERS_TO_CREATE = 10;
-    private static final int MAX_LINK_COST = 20;
-
+public class Main extends Thread {
+    // STATIC VARIABLES ////////////////////////////////////////////////////
     private static IpV4Addr subnetMask;
 
     private static HashMap<IpV4Addr, Router> routers = new HashMap<IpV4Addr, Router>();
@@ -56,7 +53,6 @@ public class Main {
                     IpV4Addr addr = new IpV4Addr(strLine);
                     routers.put(addr, new Router(addr, subnetMask));
                 } else if(readingConnections) {
-                    System.out.println(strLine);
                     IpV4Addr routerAAddr = new IpV4Addr(tokenizer.nextToken(" "));
                     IpV4Addr routerBAddr = new IpV4Addr(tokenizer.nextToken(" "));
                     int linkCost = Integer.parseInt(tokenizer.nextToken());
@@ -83,10 +79,25 @@ public class Main {
             System.exit(1);
         }
 
+        // Output time headers
+        System.out.println("TIME:0 ---------------------");
+        int time = 0;
+
         // Start the simulation
         for(Router r : routers.values()) {
             r.start();
         }
+
+        while(time < 20) {
+            try {
+                sleep(990);
+            } catch(Exception e) {}
+            time++;
+            System.out.println("TIME:" + time + " ---------------------");
+        }
+
+        // Stop the simulation
+        System.exit(0);
     }
 
     /**

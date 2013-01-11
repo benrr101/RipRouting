@@ -125,7 +125,6 @@ public class Router extends Thread {
     }
 
     private void broadcastRouteTable() {
-        System.out.println(ipAddress + "\t Broadcasting!");
         // Send the route table to each of the connections
         for(Connection c : connections.values()) {
             c.send(routingTable);
