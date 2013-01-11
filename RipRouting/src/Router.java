@@ -61,7 +61,7 @@ public class Router extends Thread {
         }
     }
 
-    // OTHER METHODS ///////////////////////////////////////////////////////
+    // METHODS /////////////////////////////////////////////////////////////
 
     /**
      * Adds the connection to the list of connections that the router has and
@@ -89,7 +89,7 @@ public class Router extends Thread {
     }
 
     private void updateRoutingTable(RoutingTable table) {
-        // @TODO: Do something!
+        // Iterate over the
     }
 
     private void broadcastRouteTable() {

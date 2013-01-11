@@ -28,8 +28,6 @@ public class RoutingTable extends ArrayList<RoutingEntry> {
             );
         }
 
-        output.append("---\n");
-
         return output.toString();
     }
 }
