@@ -13,7 +13,7 @@ public class IpV4Addr {
     private short octet4;
 
     // CONSTRUCTOR /////////////////////////////////////////////////////////
-    public IpV4Addr(String addr) throws Exception {
+    public IpV4Addr(String addr) {
         StringTokenizer tokenizer = new StringTokenizer(addr, ".");
         try {
             octet1 = Short.parseShort(tokenizer.nextToken());
@@ -21,7 +21,7 @@ public class IpV4Addr {
             octet3 = Short.parseShort(tokenizer.nextToken());
             octet4 = Short.parseShort(tokenizer.nextToken());
         } catch(Exception e) {
-            throw new Exception("Invalid IPv4 address.");
+            throw new NumberFormatException("Invalid IPv4 address.");
         }
     }
 
