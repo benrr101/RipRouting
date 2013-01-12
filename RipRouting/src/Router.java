@@ -44,16 +44,24 @@ public class Router extends Thread {
             // Step 1: Is there any data to be received?
             for(Map.Entry<IpV4Addr, Connection> entry: connections.entrySet()) {
                 // Try to connect for a update
-                //try {
+                try {
                     RoutingTable table = entry.getValue().receive();
                     if(table == null) {
                         // Nothing to receive yet...
                         continue;
                     }
+
+                    // Check to see if the route is unreachable
+                    if(routingTable.get(entry.getKey()).getMetric() == Integer.MAX_VALUE) {
+                        // We can reset the link because it is back up
+                        routingTable.get(entry.getKey()).setMetric(entry.getValue().getLinkCost());
+                    }
+
                     updateRoutingTable(table, entry.getKey());
-                //} /*catch(NullPointerException e) {
-                    // THE LINK IS DOWN!
-                //}*/
+                } catch(NullPointerException e) {
+                    // THE LINK IS DOWN! Poison the route
+                    routingTable.get(entry.getKey()).setMetric(Integer.MAX_VALUE);
+                }
             }
 
             // Step 2: Is it time to broadcast?
@@ -62,7 +70,7 @@ public class Router extends Thread {
                 broadcastRouteTable();
                 System.out.println(routingTable.toString());
             } else {
-                // Sleep! Save my CPU!
+                // Sleep
                 try {
                     sleep(500);
                 } catch(InterruptedException e) { }
@@ -98,9 +106,9 @@ public class Router extends Thread {
     }
 
     /**
-     *
-     * @param table
-     * @param source
+     * Updates the routing table with the routing table from a different router
+     * @param table     The routing table to update with
+     * @param source    The source of the routing table
      */
     private void updateRoutingTable(RoutingTable table, IpV4Addr source) {
         // Iterate over the connections that came into
@@ -128,7 +136,10 @@ public class Router extends Thread {
     }
 
 
-
+    /**
+     * Broadcasts the current routing table -- however, it does not broadcasts routes
+     * that have a next hop equal to the destination of the update (ie. split horizon)
+     */
     private void broadcastRouteTable() {
         // Send the route table to each of the connections
         for(Map.Entry<IpV4Addr, Connection> c : connections.entrySet()) {
@@ -141,7 +152,9 @@ public class Router extends Thread {
                 }
             }
 
-            c.getValue().send(r);
+            try {
+                c.getValue().send(r);
+            } catch(NullPointerException e) { /*We'll catch it next time around*/ }
         }
 
         // Set the time we last broadcast to now
