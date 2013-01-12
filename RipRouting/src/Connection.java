@@ -22,7 +22,7 @@ public class Connection extends LinkedList<RoutingTable> {
 
     private int downProbability;
 
-    private Date nextCheck = new Date();
+    private int check = 0;
 
     // CONSTRUCTORS ////////////////////////////////////////////////////////
 
@@ -48,19 +48,22 @@ public class Connection extends LinkedList<RoutingTable> {
 
         // Will we go down?
         Random r = new Random();
-        if(new Date().after(nextCheck)) {
-            if(r.nextInt(20) <= downProbability) {
+        if(check >= 100) {
+            System.out.println("IT'S TIME TO CHECK!");
+            if(r.nextInt(100) <= downProbability) {
                 // OH NO! we're going down!
                 down = true;
+                check = 0;
                 throw new NullPointerException("Link is down!");
             } else {
                 // Link is back up
                 down = false;
+                check = 0;
             }
         }
 
         // Update when we next check
-        nextCheck = new Date(System.currentTimeMillis() + 3000);
+        check++;
 
         // Return whatever is at the head of the list, or nothing
         try {
