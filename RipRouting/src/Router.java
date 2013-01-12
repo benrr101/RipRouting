@@ -141,7 +141,7 @@ public class Router extends Thread {
                 }
             }
 
-            c.getValue().send(routingTable);
+            c.getValue().send(r);
         }
 
         // Set the time we last broadcast to now

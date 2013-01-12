@@ -48,9 +48,8 @@ public class Connection extends LinkedList<RoutingTable> {
 
         // Will we go down?
         Random r = new Random();
-        if(new Date().after(nextCheck) && r.nextInt(10) <= downProbability) {
+        if(new Date().after(nextCheck)) {
             if(r.nextInt(10) <= downProbability) {
-                System.out.println("Link went down");
                 // OH NO! we're going down!
                 down = true;
                 throw new NullPointerException("Link is down!");
