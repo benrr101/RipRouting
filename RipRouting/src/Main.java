@@ -13,7 +13,7 @@ public class Main extends Thread {
     private static ArrayList<Connection> connections = new ArrayList<Connection>();
 
     public static void main(String[] args) {
-        boolean dynamics = args.length > 0;
+        boolean dynamics = args.length == 0;
 
         try {
             // Open the network definition file
