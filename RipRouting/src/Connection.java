@@ -49,7 +49,6 @@ public class Connection extends LinkedList<RoutingTable> {
         // Will we go down?
         Random r = new Random();
         if(check >= 100) {
-            System.out.println("IT'S TIME TO CHECK!");
             if(r.nextInt(100) <= downProbability) {
                 // OH NO! we're going down!
                 down = true;

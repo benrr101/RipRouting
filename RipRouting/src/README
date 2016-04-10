@@ -1,0 +1,21 @@
+DataCommII Project 1: RIPv2 Simulator
+Benjamin Russell (brr1922)
+
+Input Format -
+Input is via the file "network" in the same folder as the running java files.
+The file must contain (in this order):
+- A line SUBNETMASK:{IP ADDRESS}
+- A line ROUTERS-- to denote where routers begin
+- Multiple lines of {IP ADDRESS} to define the list of routers
+- A line CONNECTIONS-- to denote where routers are finished and connections begin
+- Multiple lines of {IP ADDRESS} {IP ADDRESS} {LINK COST} to define the connection
+Note: {IP ADDRESS} corresponds to a valid IP address. {LINK COST} corresponds
+to a positive integer.
+
+Output -
+Output may be taken from straight from the command line via
+output redirection.
+
+Turning off dynamic connections -
+By default connections will fail at a fairly high rate. To turn this off,
+specify the command line option "--no-dynamics" to turn it off.
